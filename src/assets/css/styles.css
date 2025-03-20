@@ -1,0 +1,12 @@
+body{
+    background-color: rgb(215, 206, 222);
+}
+.title-page{
+    text-align: center;
+}
+.headerpage ul{
+    display: flex;
+    flex-direction: row;
+    list-style: none;
+    gap:20px;
+}
