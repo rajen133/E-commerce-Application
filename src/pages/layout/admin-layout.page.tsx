@@ -11,69 +11,65 @@ import {
   FaSitemap,
 } from "react-icons/fa";
 import { FaUserGraduate, FaUserGroup } from "react-icons/fa6";
-import { Outlet } from "react-router";
+import { Outlet,NavLink } from "react-router";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
 const items: MenuItem[] = [
   {
     key: "dashboard",
-    label: "Dashboard",
+    label:<NavLink to="/admin">Dashboard</NavLink>,
     icon: <FaHome />,
-    onClick: () => {
-      //redirect
-    },
   },
   {
     key: "banner",
-    label: "Banners",
+    label:<NavLink to="/admin/banner/create">Banners</NavLink>,
     icon: <FaImage />,
     children: [
-      { key: "1", label: "Add Banner" },
-      { key: "2", label: "List Banner" },
+      { key: "add-banner", label: "Add Banner" },
+      { key: "list-banner", label: "List Banner" },
     ],
   },
   {
     key: "brand",
-    label: "Brands",
+    label:<NavLink to="/admin/brand">Brands</NavLink>,
     icon: <FaAmazon />,
     children: [
-      { key: "5", label: "Add Brands" },
-      { key: "6", label: "List Brands" },
+      { key: "add-brand", label: "Add Brands" },
+      { key: "list-brand", label: "List Brands" },
     ],
   },
   {
     key: "category",
-    label: "Category",
+    label: <NavLink to="/admin/category">Catogory</NavLink>,
     icon: <FaSitemap />,
     children: [
-      { key: "5", label: "Add Category" },
-      { key: "6", label: "List Category" },
+      { key: "add-category", label: "Add Category" },
+      { key: "list-category", label: "List Category" },
     ],
   },
   {
     key: "user",
-    label: "Users",
+    label: <NavLink to="/admin/user">Users</NavLink>,
     icon: <FaUserGroup />,
     children: [
-      { key: "5", label: "Add Users" },
-      { key: "6", label: "List Users" },
+      { key: "add-user", label: "Add Users" },
+      { key: "list-user", label: "List Users" },
     ],
   },
   {
     key: "products",
-    label: "Products",
+    label:<NavLink to="/admin/product">Products</NavLink>,
     icon: <FaShoppingBasket />,
     children: [
-      { key: "5", label: "Add Products" },
-      { key: "6", label: "List Products" },
+      { key: "add-product", label: "Add Products" },
+      { key: "list-product", label: "List Products" },
     ],
   },
   {
     key: "orders",
-    label: "Orders",
+    label:<NavLink to="/admin/order">Orders</NavLink>,
     icon: <FaShoppingCart />,
-    onClick: () => <Navigate to={"/admin/orders"} />,
   },
 ];
 
