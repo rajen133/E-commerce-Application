@@ -6,7 +6,7 @@ import AdminDashboard from "../pages/admin/dashboard/admin-dashboard.page";
 const Router = () => {
   const routerObj = createBrowserRouter([
     {
-      path: "/Login",
+      path: "/",
       element: <Login />,
     },
     {
