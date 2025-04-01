@@ -1,54 +1,78 @@
 import { Input } from "antd";
 import PageTitle from "../../components/page-title/page-title.component";
-import { useState } from "react";
+import { MdOutlineCancel } from "react-icons/md";
+import { IoMdSend } from "react-icons/io";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+
+const schema = yup.object({
+  username: yup.string().required(),
+  password: yup.string().required(),
+});
 
 interface IUserProps {
   username: string;
   password: string;
 }
-
+// HomePage Component
 const HomePage = (props: Readonly<{ pageTitle: string }>) => {
-  const [credentials, setCredentials] = useState<IUserProps>({
-    username: "",
-    password: "",
+  const {
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm<IUserProps>({
+    defaultValues: {
+      username: "",
+      password: "",
+    },
+    resolver: yupResolver(schema),
   });
-  console.log(credentials);
+  const handleChange = (data: IUserProps) => {
+    console.log(data);
+  };
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <PageTitle pageTitle={props.pageTitle} />
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm border border-gray-200 p-5 shadow-2xl rounded-md">
-          <form>
+          <form onSubmit={handleSubmit(handleChange)}>
             <div className="flex mb-5">
               <label className="w-1/3" htmlFor="username">
                 Username:
               </label>
-              <Input
-                type="username"
-                id="username"
-                required
-                className="w-2/3!"
-                placeholder="Enter your username"
-                onChange={(e) =>
-                  setCredentials({ ...credentials, username: e.target.value })
-                }
-              />
+              <div className="flex flex-col w-full">
+                <Input
+                  type="username"
+                  id="username"
+                  placeholder="Enter your username"
+                  status={errors.username ? "error" : ""}
+                  onChange={(e: any) => setValue("username", e.target.value)}
+                />
+                <div className="flex flex-col">
+                  <span className="text-red-800 text-xs italic">
+                    {errors?.username?.message}
+                  </span>
+                </div>
+              </div>
             </div>
             <div className="flex mb-5">
               <label className="w-1/3" htmlFor="password">
                 Password:
               </label>
-              <Input
-                type="password"
-                id="password"
-                required
-                className="w-2/3!"
-                placeholder="Enter your password"
-                onChange={(e: any) =>
-                  setCredentials({ ...credentials, password: e.target.value })
-                }
-              />
+              <div className="flex flex-col w-full">
+                <Input
+                  type="password"
+                  id="password"
+                  placeholder="Enter your password"
+                  status={errors.password ? "error" : ""}
+                  onChange={(e: any) => setValue("password", e.target.value)}
+                />
+                <span className="text-red-800 text-xs italic">
+                  {errors?.password?.message}
+                </span>
+              </div>
             </div>
             <div className="flex flex-row-reverse mb-5">
               <a
@@ -63,12 +87,14 @@ const HomePage = (props: Readonly<{ pageTitle: string }>) => {
                 type="reset"
                 className="border border-red-800 px-3 py-0.5 rounded-md bg-red-800 text-white hover:bg-red-950 hover:cursor-pointer"
               >
+                <MdOutlineCancel className="inline-block mr-2" />
                 Cancel
               </button>
               <button
                 type="submit"
                 className="border border-teal-800 px-3 py-0.5 rounded-md bg-teal-800 text-white hover:bg-teal-950 hover:cursor-pointer"
               >
+                <IoMdSend className="inline-block mr-2" />
                 Submit
               </button>
             </div>
