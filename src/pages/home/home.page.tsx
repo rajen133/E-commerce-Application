@@ -1,10 +1,18 @@
-import { Input } from "antd";
 import PageTitle from "../../components/page-title/page-title.component";
 import { MdOutlineCancel } from "react-icons/md";
 import { IoMdSend } from "react-icons/io";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import {
+  InputLabel,
+  InputType,
+  PasswordInputComponent,
+  TextInputComponent,
+} from "../../components/form/input.component";
+import { Button } from "antd";
+import { NavLink } from "react-router";
+import { Suspense } from "react";
 
 const schema = yup.object({
   username: yup.string().required(),
@@ -18,9 +26,9 @@ interface IUserProps {
 // HomePage Component
 const HomePage = (props: Readonly<{ pageTitle: string }>) => {
   const {
+    control,
     handleSubmit,
     formState: { errors },
-    setValue,
   } = useForm<IUserProps>({
     defaultValues: {
       username: "",
@@ -39,74 +47,66 @@ const HomePage = (props: Readonly<{ pageTitle: string }>) => {
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm border border-gray-200 p-5 shadow-2xl rounded-md">
           <form onSubmit={handleSubmit(handleChange)}>
             <div className="flex mb-5">
-              <label className="w-1/3" htmlFor="username">
-                Username:
-              </label>
+              <InputLabel htmlFor="username">Username:</InputLabel>
               <div className="flex flex-col w-full">
-                <Input
-                  type="username"
-                  id="username"
-                  placeholder="Enter your username"
-                  status={errors.username ? "error" : ""}
-                  onChange={(e: any) => setValue("username", e.target.value)}
-                />
-                <div className="flex flex-col">
-                  <span className="text-red-800 text-xs italic">
-                    {errors?.username?.message}
-                  </span>
-                </div>
+                {/* <Suspense> used to optimize the performance */}
+                <Suspense fallback={<>...Loading</>}>
+                  <TextInputComponent
+                    name="username"
+                    type={InputType.TEXT}
+                    errorMsg={errors?.username?.message}
+                    control={control}
+                  />
+                </Suspense>
               </div>
             </div>
             <div className="flex mb-5">
-              <label className="w-1/3" htmlFor="password">
-                Password:
-              </label>
+              <InputLabel htmlFor="password">Password:</InputLabel>
               <div className="flex flex-col w-full">
-                <Input
-                  type="password"
-                  id="password"
-                  placeholder="Enter your password"
-                  status={errors.password ? "error" : ""}
-                  onChange={(e: any) => setValue("password", e.target.value)}
-                />
-                <span className="text-red-800 text-xs italic">
-                  {errors?.password?.message}
-                </span>
+                <Suspense>
+                  <PasswordInputComponent
+                    name="password"
+                    errorMsg={errors?.password?.message}
+                    control={control}
+                  />
+                </Suspense>
               </div>
             </div>
             <div className="flex flex-row-reverse mb-5">
-              <a
-                href="/forget-password"
+              <NavLink
+                to="/forget-password"
                 className="text-teal-800 underline font-light text-sm italic hover:text-teal-950"
               >
                 Forget password?
-              </a>
+              </NavLink>
             </div>
             <div className="flex gap-5">
-              <button
-                type="reset"
-                className="border border-red-800 px-3 py-0.5 rounded-md bg-red-800 text-white hover:bg-red-950 hover:cursor-pointer"
+              <Button
+                htmlType="reset"
+                variant="solid"
+                className="bg-red-800! hover:bg-red-900! text-white! hover:border-red-950!"
               >
+                {" "}
                 <MdOutlineCancel className="inline-block mr-2" />
                 Cancel
-              </button>
-              <button
-                type="submit"
-                className="border border-teal-800 px-3 py-0.5 rounded-md bg-teal-800 text-white hover:bg-teal-950 hover:cursor-pointer"
+              </Button>
+              <Button
+                htmlType="submit"
+                variant="solid"
+                className="bg-teal-800! hover:bg-teal-900! text-white! hover:border-teal-950!"
               >
-                <IoMdSend className="inline-block mr-2" />
-                Submit
-              </button>
+                <IoMdSend className="inline-block mr-2" /> Submit
+              </Button>
             </div>
           </form>
           <div className="text-left mt-5">
             Not registered yet?{" "}
-            <a
-              href="/register"
+            <NavLink
+              to="/register"
               className="text-teal-800 underline font-light italic text-sm hover:text-teal-950"
             >
               Sign Up Now!
-            </a>
+            </NavLink>
           </div>
         </div>
       </div>
