@@ -11,6 +11,7 @@ import {
 } from "react-icons/fa";
 import { FaUserGroup } from "react-icons/fa6";
 import { NavLink, Outlet } from "react-router";
+import BreadcrumbComponent from "../../components/breadcrumb/breadcrumb.component";
 
 const { Header, Sider, Content } = Layout;
 
@@ -141,10 +142,13 @@ const AdminLayout = () => {
                 height: 64,
               }}
             />
+            <div className="flex mx-10 pt-2 ">
+              <BreadcrumbComponent />
+            </div>
           </Header>
           <Content
             style={{
-              margin: "24px 16px",
+              margin: "40px 16px",
               padding: 24,
               minHeight: "100vh",
               background: colorBgContainer,

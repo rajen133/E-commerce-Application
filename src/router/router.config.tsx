@@ -1,5 +1,7 @@
 import { RouterProvider, createBrowserRouter } from "react-router";
 import { lazy } from "react";
+import ListBanner from "../pages/banner/list-banner.page";
+
 // lazy() optimize the performance
 const HomePage = lazy(() => import("../pages/home/home.page"));
 const RegisterPage = lazy(() => import("../pages/auth/register.page"));
@@ -10,6 +12,7 @@ const AdminDashboard = lazy(
 const NotFoundError = lazy(
   () => import("../components/errors/not-found.component")
 );
+const EditBanner = lazy(() => import("../pages/banner/edit-banner.page"));
 
 const routerObj = createBrowserRouter([
   {
@@ -31,6 +34,14 @@ const routerObj = createBrowserRouter([
       {
         path: "banner/create",
         element: <>Create Banner</>,
+      },
+      {
+        path: "banner",
+        element: <ListBanner />,
+      },
+      {
+        path: "banner/:id",
+        element: <EditBanner />,
       },
       {
         path: "*",
