@@ -1,6 +1,7 @@
 import { RouterProvider, createBrowserRouter } from "react-router";
 import { lazy } from "react";
 import ListBanner from "../pages/banner/list-banner.page";
+import { ToastContainer } from "react-toastify";
 
 // lazy() optimize the performance
 const HomePage = lazy(() => import("../pages/home/home.page"));
@@ -53,6 +54,7 @@ const routerObj = createBrowserRouter([
 const RouterConfig = () => {
   return (
     <>
+      <ToastContainer />
       <RouterProvider router={routerObj} />
     </>
   );

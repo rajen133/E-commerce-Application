@@ -1,20 +1,6 @@
 import { Table } from "antd";
-import type { TableProps } from "antd";
-interface ImageType {
-  url: string;
-  optimized_url: string;
-}
 
-interface DataType {
-  key: number;
-  _id: number;
-  title: string;
-  price: number;
-  description: string;
-  category: string;
-  image: ImageType;
-}
-const columns: TableProps<DataType>["columns"] = [
+const columns = [
   {
     title: "Title",
     key: "title",
@@ -44,7 +30,6 @@ const columns: TableProps<DataType>["columns"] = [
   {
     title: "Action",
     key: "action",
-    dataIndex: "action",
     render: (_: any, data: any) => (
       <>
         <a href={"/admin/banner" + data._id} className="me-3">
@@ -56,7 +41,7 @@ const columns: TableProps<DataType>["columns"] = [
   },
 ];
 
-const data: DataType[] = [
+const data = [
   {
     key: 1,
     _id: 1234,

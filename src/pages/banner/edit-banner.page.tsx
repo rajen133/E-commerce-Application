@@ -1,10 +1,13 @@
-import { useParams } from "react-router";
+import { useParams, useSearchParams } from "react-router";
 
 const EditBanner = () => {
   //params
   const params = useParams();
-  console.log(params);
-  return <></>;
+
+  //query
+  const [query, setQuery] = useSearchParams();
+  console.log(query.get("test"));
+  return <>The content of {params.id}</>;
 };
 
 export default EditBanner;
