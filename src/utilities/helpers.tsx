@@ -1,12 +1,13 @@
-export const setLocalStorage = (name: string, value: string) => {
-  if (typeof value === "string") {
+export const setLocalStorage = (name: string, value: any) => {
+  if (typeof value !== "string") {
     value = JSON.stringify(value);
   }
   localStorage.setItem(name, value);
 };
 
 export const getLocalStorage = (name: string) => {
-  localStorage.getItem(name);
+  const value = localStorage.getItem(name);
+  return value;
 };
 
 // export const removeLocalStorage = (name: string) => {

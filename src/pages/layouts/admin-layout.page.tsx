@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { Button, Layout, Menu, theme, MenuProps } from "antd";
 import {
@@ -10,8 +10,10 @@ import {
   FaSitemap,
 } from "react-icons/fa";
 import { FaUserGroup } from "react-icons/fa6";
-import { NavLink, Outlet } from "react-router";
+import { NavLink, Outlet, useNavigate } from "react-router";
 import BreadcrumbComponent from "../../components/breadcrumb/breadcrumb.component";
+import { useAuth } from "../../context/auth.context";
+import { toast } from "react-toastify";
 
 const { Header, Sider, Content } = Layout;
 
@@ -106,6 +108,8 @@ const items: MenuItem[] = [
 ];
 
 const AdminLayout = () => {
+  const navigate = useNavigate();
+
   const [collapsed, setCollapsed] = useState(false);
   const [current, setCurrent] = useState("1");
   const {
@@ -116,6 +120,15 @@ const AdminLayout = () => {
     console.log("click ", e);
     setCurrent(e.key);
   };
+  const { user: loggedInUser } = useAuth();
+
+  useEffect(() => {
+    if (!loggedInUser) {
+      toast.error("Please login first");
+      navigate("/");
+    }
+  }, []);
+
   return (
     <>
       <Layout>

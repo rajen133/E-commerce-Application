@@ -11,11 +11,11 @@ import {
   TextInputComponent,
 } from "../../components/form/input.component";
 import { Button } from "antd";
-import { NavLink } from "react-router";
-import { Suspense } from "react";
-import authSvc from "../../services/auth.service";
+import { NavLink, useNavigate } from "react-router";
+import { Suspense, useEffect } from "react";
+
+import { useAuth } from "../../context/auth.context";
 import { toast } from "react-toastify";
-import { setLocalStorage } from "../../utilities/helpers";
 
 const schema = yup.object({
   username: yup.string().required(),
@@ -28,6 +28,8 @@ interface IUserProps {
 }
 // HomePage Component
 const HomePage = (props: Readonly<{ pageTitle: string }>) => {
+  const navigate = useNavigate();
+
   const {
     control,
     handleSubmit,
@@ -40,26 +42,21 @@ const HomePage = (props: Readonly<{ pageTitle: string }>) => {
     resolver: yupResolver(schema),
   });
 
-  const submitForm = async (data: IUserProps) => {
-    try {
-      const response = await authSvc.post("/auth/login", data);
-      setLocalStorage("accessToken", response.data.accessToken);
-      setLocalStorage("refreshToken", response.data.refreshToken);
+  const { login, user } = useAuth();
 
-      console.log(response);
-      toast.success("Welcome to Admin Panel");
-    } catch (exception: any) {
-      console.log(exception);
-      toast.error(exception.data.message);
+  useEffect(() => {
+    if (user) {
+      toast.success(" Welcome to " + user.role + "  panel");
+      navigate("/" + user.role);
     }
-  };
+  }, [user]);
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <PageTitle pageTitle={props.pageTitle} />
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm border border-gray-200 p-5 shadow-2xl rounded-md">
-          <form onSubmit={handleSubmit(submitForm)}>
+          <form onSubmit={handleSubmit(login)}>
             <div className="flex mb-5">
               <InputLabel htmlFor="username">Username:</InputLabel>
               <div className="flex flex-col w-full">
