@@ -1,130 +1,23 @@
 import { useEffect, useState } from "react";
-import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { Button, Layout, Menu, theme, MenuProps } from "antd";
-import {
-  FaAmazon,
-  FaHome,
-  FaImage,
-  FaShoppingBasket,
-  FaShoppingCart,
-  FaSitemap,
-} from "react-icons/fa";
-import { FaUserGroup } from "react-icons/fa6";
-import { NavLink, Outlet, useNavigate } from "react-router";
-import BreadcrumbComponent from "../../components/breadcrumb/breadcrumb.component";
+import { Layout } from "antd";
+
+import { Outlet, useNavigate } from "react-router";
 import { useAuth } from "../../context/auth.context";
-import { toast } from "react-toastify";
+import AdminSidebar from "../../components/sidebar/sidebar.component";
+import { UserHeader } from "../../components/headers/user-header.component";
 
-const { Header, Sider, Content } = Layout;
-
-type MenuItem = Required<MenuProps>["items"][number];
-
-const items: MenuItem[] = [
-  {
-    key: "dashboard",
-    label: <NavLink to="/admin">Dashboard</NavLink>,
-    icon: <FaHome />,
-  },
-  {
-    key: "banner",
-    label: "Banners",
-    icon: <FaImage />,
-    children: [
-      {
-        key: "add-banner",
-        label: <NavLink to="/admin/banner/create">Add Banner</NavLink>,
-      },
-      {
-        key: "list-banner",
-        label: <NavLink to="/admin/banner">List Banner</NavLink>,
-      },
-    ],
-  },
-  {
-    key: "brand",
-    label: "Brands",
-    icon: <FaAmazon />,
-    children: [
-      {
-        key: "add-brand",
-        label: <NavLink to="/admin/brand/create">Add Brand</NavLink>,
-      },
-      {
-        key: "list-brand",
-        label: <NavLink to="/admin/brand">List Brand</NavLink>,
-      },
-    ],
-  },
-  {
-    key: "category",
-    label: "Categories",
-    icon: <FaSitemap />,
-    children: [
-      {
-        key: "add-category",
-        label: <NavLink to="/admin/category/create">Add Category</NavLink>,
-      },
-      {
-        key: "list-category",
-        label: <NavLink to="/admin/category">List Category</NavLink>,
-      },
-    ],
-  },
-  {
-    key: "user",
-    label: "Users",
-    icon: <FaUserGroup />,
-    children: [
-      {
-        key: "add-user",
-        label: <NavLink to="/admin/user/create">Add User</NavLink>,
-      },
-      {
-        key: "list-user",
-        label: <NavLink to="/admin/user">List User</NavLink>,
-      },
-    ],
-  },
-  {
-    key: "product",
-    label: "Products",
-    icon: <FaShoppingBasket />,
-    children: [
-      {
-        key: "add-product",
-        label: <NavLink to="/admin/product/create">Add Products</NavLink>,
-      },
-      {
-        key: "list-product",
-        label: <NavLink to="/admin/product">List Products</NavLink>,
-      },
-    ],
-  },
-  {
-    key: "order",
-    label: <NavLink to="/admin/order">Orders</NavLink>,
-    icon: <FaShoppingCart />,
-  },
-];
+const { Content } = Layout;
 
 const AdminLayout = () => {
   const navigate = useNavigate();
 
   const [collapsed, setCollapsed] = useState(false);
-  const [current, setCurrent] = useState("1");
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
 
-  const onClick: MenuProps["onClick"] = (e) => {
-    console.log("click ", e);
-    setCurrent(e.key);
-  };
   const { user: loggedInUser } = useAuth();
 
   useEffect(() => {
     if (!loggedInUser) {
-      toast.error("Please login first");
+      // toast.error("Please login first");
       navigate("/");
     }
   }, []);
@@ -132,40 +25,14 @@ const AdminLayout = () => {
   return (
     <>
       <Layout>
-        <Sider trigger={null} collapsible collapsed={collapsed}>
-          <div className="demo-logo-vertical" />
-          <Menu
-            theme="dark"
-            onClick={onClick}
-            defaultOpenKeys={["sub1"]}
-            selectedKeys={[current]}
-            mode="inline"
-            items={items}
-          />
-        </Sider>
+        <AdminSidebar collapsed={collapsed} />
         <Layout>
-          <Header style={{ padding: 0, background: colorBgContainer }}>
-            <Button
-              type="text"
-              icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-              onClick={() => setCollapsed(!collapsed)}
-              style={{
-                fontSize: "16px",
-                width: 64,
-                height: 64,
-              }}
-            />
-            <div className="flex mx-10 pt-2 ">
-              <BreadcrumbComponent />
-            </div>
-          </Header>
+          <UserHeader collapsed={collapsed} setCollapsed={setCollapsed} />
           <Content
             style={{
               margin: "40px 16px",
               padding: 24,
               minHeight: "100vh",
-              background: colorBgContainer,
-              borderRadius: borderRadiusLG,
             }}
           >
             {/* Dynamic content */}

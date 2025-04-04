@@ -7,6 +7,7 @@ export enum InputType {
   EMAIL = "email",
   TEL = "tel",
   URL = "url",
+  NUMBER = "number",
 }
 interface ITextInputProps {
   name: string;
@@ -54,6 +55,7 @@ export const TextInputComponent = ({
               id={name}
               placeholder={`Enter your ${name}`}
               status={errorMsg ? "error" : ""}
+              className="w-full"
               {...field}
             />
             <div className="flex flex-col">

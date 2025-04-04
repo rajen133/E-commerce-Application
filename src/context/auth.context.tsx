@@ -1,6 +1,13 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  Suspense,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import authSvc from "../services/auth.service";
 import { getLocalStorage, setLocalStorage } from "../utilities/helpers";
+import { toast } from "react-toastify";
 
 interface AuthContextProps {
   isAuthenticated: boolean;
@@ -36,8 +43,13 @@ const AuthProvider = ({ children }: { children: any }) => {
       setLocalStorage("refreshToken", loginResponse.data.refreshToken);
 
       await getLoggedInUser();
-    } catch (exception) {
-      // console.log(exception);
+    } catch (exception: any) {
+      console.log(exception);
+      if (exception) {
+        toast.error(exception.data.message);
+      } else {
+        toast.error("Error occurred while logging in");
+      }
     } finally {
       setLoading(false);
     }
@@ -61,17 +73,19 @@ const AuthProvider = ({ children }: { children: any }) => {
 
   return (
     <>
-      <AuthContext.Provider
-        value={{
-          isAuthenticated: user ? true : false,
-          user: user,
-          login: login,
-          getLoggedInUser: getLoggedInUser,
-          loading: loading,
-        }}
-      >
-        {children}
-      </AuthContext.Provider>
+      <Suspense fallback={<>Loading...</>}>
+        <AuthContext.Provider
+          value={{
+            isAuthenticated: user ? true : false,
+            user: user,
+            login: login,
+            getLoggedInUser: getLoggedInUser,
+            loading: loading,
+          }}
+        >
+          {children}
+        </AuthContext.Provider>
+      </Suspense>
     </>
   );
 };

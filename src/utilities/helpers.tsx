@@ -1,3 +1,5 @@
+import { toast } from "react-toastify";
+
 export const setLocalStorage = (name: string, value: any) => {
   if (typeof value !== "string") {
     value = JSON.stringify(value);
@@ -16,3 +18,18 @@ export const getLocalStorage = (name: string) => {
 // export const clearLocalStorage = () => {
 //   localStorage.clear();
 // };
+
+// For toast notifications
+export const notify = (msg: string, type?: string | null | undefined) => {
+  if (type === "success") {
+    toast.success(msg);
+  } else if (type === "error") {
+    toast.error(msg);
+  } else if (type === "info") {
+    toast.info(msg);
+  } else if (type === "warning") {
+    toast.warning(msg);
+  } else {
+    toast(msg);
+  }
+};

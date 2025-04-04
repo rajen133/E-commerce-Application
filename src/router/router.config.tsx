@@ -15,6 +15,7 @@ const NotFoundError = lazy(
   () => import("../components/errors/not-found.component")
 );
 const EditBanner = lazy(() => import("../pages/banner/edit-banner.page"));
+const CreateBanner = lazy(() => import("../pages/banner/create-banner.page"));
 
 const routerObj = createBrowserRouter([
   {
@@ -35,7 +36,7 @@ const routerObj = createBrowserRouter([
       },
       {
         path: "banner/create",
-        element: <>Create Banner</>,
+        element: <CreateBanner />,
       },
       {
         path: "banner",

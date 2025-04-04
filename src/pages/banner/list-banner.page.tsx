@@ -7,11 +7,6 @@ const columns = [
     dataIndex: "title",
   },
   {
-    title: "Price (Rs.)",
-    key: "price",
-    dataIndex: "price",
-  },
-  {
     title: "Description",
     key: "description",
     dataIndex: "description",
@@ -20,6 +15,11 @@ const columns = [
     title: "Category",
     key: "category",
     dataIndex: "category",
+  },
+  {
+    title: "Price (Rs.)",
+    key: "price",
+    dataIndex: "price",
   },
   {
     title: "Image",
