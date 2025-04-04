@@ -3,16 +3,12 @@ import {
   InputLabel,
   InputType,
   TextInputComponent,
+  UploadSingleFile,
 } from "../../components/form/input.component";
 import { useForm } from "react-hook-form";
-import { Upload, Button } from "antd";
-import {
-  DeleteOutlined,
-  SendOutlined,
-  UploadOutlined,
-} from "@ant-design/icons";
-import type { UploadFile, UploadProps } from "antd";
-import { useState } from "react";
+import { Button } from "antd";
+import { DeleteOutlined, SendOutlined } from "@ant-design/icons";
+
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import bannerSvc from "../../services/banner.service";
@@ -44,23 +40,6 @@ const CreateBanner = () => {
     },
     resolver: yupResolver(schemaObj),
   });
-  const [fileList, setFileList] = useState<UploadFile[]>([]);
-
-  const props: UploadProps = {
-    onRemove: (file) => {
-      const index = fileList.indexOf(file);
-      const newFileList = fileList.slice();
-      newFileList.splice(index, 1);
-      setFileList(newFileList);
-    },
-    beforeUpload: (file) => {
-      //   setFileList([...fileList, file]);
-      setFileList([file]);
-      setValue("image", file as any);
-      return false;
-    },
-    fileList,
-  };
 
   const submitForm = async (data: any) => {
     try {
@@ -79,7 +58,7 @@ const CreateBanner = () => {
     <>
       <Content className=" h-screen bg-white p-2.5 rounded-md ">
         <div className="flex mb-4">
-          <h1 className="text-2xl font-semibold text-teal-950 underline underline-offset-2">
+          <h1 className="text-2xl font-semibold text-teal-800 underline underline-offset-2">
             Create Banner
           </h1>
         </div>
@@ -161,31 +140,18 @@ const CreateBanner = () => {
             <div className="flex flex-row w-full">
               <div className="w-1/4 ">
                 <InputLabel
-                  htmlFor="price"
+                  htmlFor="image"
                   classes="w-full font-semibold text-lg"
                 >
                   Image:
                 </InputLabel>
               </div>
-              <div className="w-2/4 mb-4">
-                <Upload {...props}>
-                  <Button icon={<UploadOutlined />}>Select file</Button>
-                </Upload>
-                {errors.image?.message as string}
-              </div>
-              <div className="w-1/4">
-                {fileList && fileList.length > 0 ? (
-                  <>
-                    <img
-                      src={URL.createObjectURL(fileList[0] as any)}
-                      alt="Image"
-                      className="w-32 border border-teal-100 rounded-sm"
-                    />
-                  </>
-                ) : (
-                  <></>
-                )}
-              </div>
+
+              <UploadSingleFile
+                name="image"
+                setValue={setValue}
+                errorMsg={errors?.image?.message}
+              />
             </div>
             <div className="flex flex-row w-full mb-4 gap-5 items-center justify-center">
               <Button

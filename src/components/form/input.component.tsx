@@ -1,6 +1,9 @@
-import { Input } from "antd";
+import { Input, Upload, Button } from "antd";
 import { Controller } from "react-hook-form";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import { UploadOutlined } from "@ant-design/icons";
+import type { UploadFile, UploadProps } from "antd";
+import { useState } from "react";
 
 export enum InputType {
   TEXT = "text",
@@ -100,6 +103,58 @@ export const PasswordInputComponent = ({
           </>
         )}
       />
+    </>
+  );
+};
+
+export interface IUploadFileProps {
+  name: string;
+  setValue: Function;
+  errorMsg?: string;
+}
+export const UploadSingleFile = ({
+  name,
+  setValue,
+  errorMsg = "",
+}: IUploadFileProps) => {
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+
+  const props: UploadProps = {
+    onRemove: (file) => {
+      const index = fileList.indexOf(file);
+      const newFileList = fileList.slice();
+      newFileList.splice(index, 1);
+      setFileList(newFileList);
+    },
+    beforeUpload: (file) => {
+      //   setFileList([...fileList, file]);
+      setFileList([file]);
+      setValue(name, file as any);
+      return false;
+    },
+    fileList,
+  };
+  return (
+    <>
+      <div className="w-2/4 mb-4">
+        <Upload {...props}>
+          <Button icon={<UploadOutlined />}>Select file</Button>
+        </Upload>
+        {errorMsg}
+      </div>
+      <div className="w-1/4">
+        {fileList && fileList.length > 0 ? (
+          <>
+            <img
+              src={URL.createObjectURL(fileList[0] as any)}
+              alt="Image"
+              className="w-32 border border-teal-100 rounded-sm"
+            />
+          </>
+        ) : (
+          <></>
+        )}
+      </div>
     </>
   );
 };

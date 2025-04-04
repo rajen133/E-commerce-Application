@@ -24,7 +24,6 @@ export const AuthContext = createContext<AuthContextProps>({
   getLoggedInUser: () => Promise.resolve(),
   loading: false,
 });
-
 //Custom hook
 export const useAuth = () => {
   return useContext(AuthContext);
