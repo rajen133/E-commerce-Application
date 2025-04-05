@@ -5,12 +5,18 @@ import bannerSvc from "../services/banner.service";
 export const BannerContext = createContext({
   data: [] as any,
   loading: false,
-  setLoading: (loading: boolean) => {},
+  setLoading: (_loading: boolean) => {},
+  pagination: { current: 1, pageSize: 10 },
+  loadData: (_query: any) => {},
 });
 
 const BannerProvider = ({ children }: { children: any }) => {
   const [data, setData] = useState<Array<any>>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+  });
 
   const loadData = async (query: any = {}) => {
     try {
@@ -30,6 +36,10 @@ const BannerProvider = ({ children }: { children: any }) => {
       }));
       setData(filteredData);
       console.log("Banner data", filteredData);
+      setPagination({
+        current: response.data.products.page,
+        pageSize: response.data.products.limit,
+      });
     } catch (exception) {
       console.error(exception);
     } finally {
@@ -40,7 +50,6 @@ const BannerProvider = ({ children }: { children: any }) => {
   useEffect(() => {
     //data fetching api call
     loadData();
-    console.log("BannerProvider mounted");
   }, []);
 
   return (
@@ -50,6 +59,8 @@ const BannerProvider = ({ children }: { children: any }) => {
           data: data,
           loading: loading,
           setLoading: setLoading,
+          pagination: pagination,
+          loadData: loadData,
         }}
       >
         {children}
@@ -61,6 +72,7 @@ export default BannerProvider;
 
 // Custom Banner hook
 export const useBanner = () => {
-  let { data, loading, setLoading } = useContext(BannerContext);
-  return { data, loading, setLoading };
+  let { data, loading, setLoading, pagination, loadData } =
+    useContext(BannerContext);
+  return { data, loading, setLoading, pagination, loadData };
 };

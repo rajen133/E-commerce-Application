@@ -22,29 +22,26 @@ export interface ITableProps {
   data: Array<any>;
   loading?: boolean;
   setLoading?: Function;
+  pagination?: {
+    current: number;
+    pageSize: number;
+  };
 }
 
 //Table Component
-const TableComponent = ({ columns, data, loading }: ITableProps) => {
-  // const [data, setData] = useState<any[]>();
-  // const [loading, setLoading] = useState(false);
+const TableComponent = ({
+  columns,
+  data,
+  loading,
+  pagination,
+}: ITableProps) => {
   const [tableParams, setTableParams] = useState<TableParams>({
-    pagination: {
-      current: 1,
-      pageSize: 10,
-    },
+    pagination: pagination,
   });
 
-  const handleTableChange: TableProps<any>["onChange"] = (
-    pagination,
-    filters,
-    sorter
-  ) => {
+  const handleTableChange: TableProps<any>["onChange"] = (pagination) => {
     setTableParams({
       pagination,
-      filters,
-      sortOrder: Array.isArray(sorter) ? undefined : sorter.order,
-      sortField: Array.isArray(sorter) ? undefined : sorter.field,
     });
 
     // `dataSource` is useless since `pageSize` changed
@@ -56,7 +53,7 @@ const TableComponent = ({ columns, data, loading }: ITableProps) => {
   return (
     <Table<any>
       columns={columns}
-      rowKey={(record) => record}
+      rowKey={(record, index) => record.id || record._id || index}
       dataSource={data}
       pagination={tableParams.pagination}
       loading={loading}
