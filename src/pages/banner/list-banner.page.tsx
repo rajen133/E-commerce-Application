@@ -1,69 +1,43 @@
-// import { Table } from "antd";
-import TableComponent from "../../components/table/table.component";
+import TableComponent, {
+  ColumnsType,
+} from "../../components/table/table.component";
+import { useBanner } from "../../context/banner.context";
 
-// const columns = [
-//   {
-//     title: "Title",
-//     key: "title",
-//     dataIndex: "title",
-//   },
-//   {
-//     title: "Description",
-//     key: "description",
-//     dataIndex: "description",
-//   },
-//   {
-//     title: "Category",
-//     key: "category",
-//     dataIndex: "category",
-//   },
-//   {
-//     title: "Price (Rs.)",
-//     key: "price",
-//     dataIndex: "price",
-//   },
-//   {
-//     title: "Image",
-//     key: "image",
-//     dataIndex: "image",
-//     render: (val: any) => <img src={val.optimized_url} alt="image" />,
-//   },
-//   {
-//     title: "Action",
-//     key: "action",
-//     render: (_: any, data: any) => (
-//       <>
-//         <a href={"/admin/banner" + data._id} className="me-3">
-//           Edit
-//         </a>
-//         <a href="/admin/banner">Delete</a>
-//       </>
-//     ),
-//   },
-// ];
-
-// const data = [
-//   {
-//     key: 1,
-//     _id: 1234,
-//     title: "Dell",
-//     price: 80000,
-//     description: "Purchase on 01 January",
-//     category: "Laptop",
-//     image: { url: "", optimized_url: "" },
-//   },
-//   {
-//     key: 2,
-//     _id: 12345,
-//     title: "Acer",
-//     price: 80000,
-//     description: "Purchase on 01 January",
-//     category: "Desktop",
-//     image: { url: "", optimized_url: "" },
-//   },
-// ];
+const columns: ColumnsType<any> = [
+  {
+    title: "Title",
+    dataIndex: "title",
+  },
+  {
+    title: "Description",
+    dataIndex: "description",
+    width: "30%",
+  },
+  {
+    title: "Categories",
+    dataIndex: "category",
+  },
+  {
+    title: "Price",
+    dataIndex: "price",
+  },
+  {
+    title: "Images",
+    dataIndex: "images",
+    render: (value) => (
+      <>
+        <img src={value?.optimized_url} alt="Image" className="w-20" />
+      </>
+    ),
+  },
+  {
+    title: "Action",
+    render: () => <>Edit/Delete</>,
+  },
+];
 
 const ListBanner = () => {
+  const { data, loading, setLoading } = useBanner();
   return (
     <>
       <div className="flex flex-col bg-white p-4 h-screen w-full rounded-md">
@@ -72,9 +46,13 @@ const ListBanner = () => {
             Banner Listing
           </h1>
         </div>
-        {/* <Table columns={columns} dataSource={data} className="w-full!"></Table> */}
 
-        <TableComponent />
+        <TableComponent
+          columns={columns}
+          data={data}
+          loading={loading}
+          setLoading={setLoading}
+        />
       </div>
     </>
   );

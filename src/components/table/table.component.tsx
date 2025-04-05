@@ -1,26 +1,14 @@
-import { useEffect, useState } from "react";
+/* eslint-disable compat/compat */
+import { useState } from "react";
 import type { GetProp, TableProps } from "antd";
 import { Table } from "antd";
-import type { AnyObject } from "antd/es/_util/type";
 import type { SorterResult } from "antd/es/table/interface";
 
-type ColumnsType<T extends object = object> = TableProps<T>["columns"];
+export type ColumnsType<T extends object = object> = TableProps<T>["columns"];
 type TablePaginationConfig = Exclude<
   GetProp<TableProps, "pagination">,
   boolean
 >;
-
-interface DataType {
-  name: {
-    first: string;
-    last: string;
-  };
-  gender: string;
-  email: string;
-  login: {
-    uuid: string;
-  };
-}
 
 interface TableParams {
   pagination?: TablePaginationConfig;
@@ -29,46 +17,17 @@ interface TableParams {
   filters?: Parameters<GetProp<TableProps, "onChange">>[1];
 }
 
-const columns: ColumnsType<DataType> = [
-  {
-    title: "Name",
-    dataIndex: "name",
-    sorter: true,
-    render: (name) => `${name.first} ${name.last}`,
-    width: "20%",
-  },
-  {
-    title: "Gender",
-    dataIndex: "gender",
-    filters: [
-      { text: "Male", value: "male" },
-      { text: "Female", value: "female" },
-    ],
-    width: "20%",
-  },
-  {
-    title: "Email",
-    dataIndex: "email",
-  },
-];
+export interface ITableProps {
+  columns: ColumnsType;
+  data: Array<any>;
+  loading?: boolean;
+  setLoading?: Function;
+}
 
-const toURLSearchParams = <T extends AnyObject>(record: T) => {
-  const params = new URLSearchParams();
-  for (const [key, value] of Object.entries(record)) {
-    params.append(key, value);
-  }
-  return params;
-};
-
-const getRandomuserParams = (params: TableParams) => ({
-  results: params.pagination?.pageSize,
-  page: params.pagination?.current,
-  ...params,
-});
-
-const TableComponent = () => {
-  const [data, setData] = useState<DataType[]>();
-  const [loading, setLoading] = useState(false);
+//Table Component
+const TableComponent = ({ columns, data, loading }: ITableProps) => {
+  // const [data, setData] = useState<any[]>();
+  // const [loading, setLoading] = useState(false);
   const [tableParams, setTableParams] = useState<TableParams>({
     pagination: {
       current: 1,
@@ -76,36 +35,7 @@ const TableComponent = () => {
     },
   });
 
-  const params = toURLSearchParams(getRandomuserParams(tableParams));
-
-  const fetchData = () => {
-    setLoading(true);
-    fetch(`https://randomuser.me/api?${params.toString()}`)
-      .then((res) => res.json())
-      .then(({ results }) => {
-        setData(results);
-        setLoading(false);
-        setTableParams({
-          ...tableParams,
-          pagination: {
-            ...tableParams.pagination,
-            total: 200,
-            // 200 is mock data, you should read it from server
-            // total: data.totalCount,
-          },
-        });
-      });
-  };
-
-  useEffect(fetchData, [
-    tableParams.pagination?.current,
-    tableParams.pagination?.pageSize,
-    tableParams?.sortOrder,
-    tableParams?.sortField,
-    JSON.stringify(tableParams.filters),
-  ]);
-
-  const handleTableChange: TableProps<DataType>["onChange"] = (
+  const handleTableChange: TableProps<any>["onChange"] = (
     pagination,
     filters,
     sorter
@@ -119,21 +49,21 @@ const TableComponent = () => {
 
     // `dataSource` is useless since `pageSize` changed
     if (pagination.pageSize !== tableParams.pagination?.pageSize) {
-      setData([]);
+      // setData([]);
     }
   };
 
   return (
-    <>
-      <Table
-        columns={columns}
-        dataSource={data}
-        rowKey={(record) => record.login.uuid}
-        pagination={tableParams.pagination}
-        loading={loading}
-        onChange={handleTableChange}
-      />
-    </>
+    <Table<any>
+      columns={columns}
+      rowKey={(record) => record}
+      dataSource={data}
+      pagination={tableParams.pagination}
+      loading={loading}
+      onChange={handleTableChange}
+      className="h-screen overflow-y-scroll "
+      sticky={true}
+    />
   );
 };
 

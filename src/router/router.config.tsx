@@ -3,6 +3,7 @@ import { lazy } from "react";
 import ListBanner from "../pages/banner/list-banner.page";
 import { ToastContainer } from "react-toastify";
 import AuthProvider from "../context/auth.context";
+import BannerProvider from "../context/banner.context";
 
 // lazy() optimize the performance
 const HomePage = lazy(() => import("../pages/home/home.page"));
@@ -28,7 +29,11 @@ const routerObj = createBrowserRouter([
   },
   {
     path: "/admin",
-    element: <AdminLayout />,
+    element: (
+      <BannerProvider>
+        <AdminLayout />
+      </BannerProvider>
+    ),
     children: [
       {
         index: true,
