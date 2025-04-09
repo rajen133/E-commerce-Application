@@ -111,11 +111,13 @@ export interface IUploadFileProps {
   name: string;
   setValue: Function;
   errorMsg?: string;
+  thumbnail?: any;
 }
 export const UploadSingleFile = ({
   name,
   setValue,
   errorMsg = "",
+  thumbnail = null,
 }: IUploadFileProps) => {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
 
@@ -134,6 +136,7 @@ export const UploadSingleFile = ({
     },
     fileList,
   };
+  console.log(thumbnail);
   return (
     <>
       <div className="w-2/4 mb-4">
@@ -151,8 +154,19 @@ export const UploadSingleFile = ({
               className="w-32 border border-teal-100 rounded-sm"
             />
           </>
+        ) : thumbnail ? (
+          <img
+            src={thumbnail}
+            alt="Image"
+            className="w-32 border border-teal-100 rounded-sm"
+          />
         ) : (
-          <></>
+          <>
+            <img
+              src="https://placehold.co/300x75/white/orange?text=Upload image"
+              className="w-32 border border-teal-100 rounded-sm"
+            />
+          </>
         )}
       </div>
     </>

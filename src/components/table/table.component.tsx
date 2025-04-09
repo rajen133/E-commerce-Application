@@ -1,5 +1,4 @@
-/* eslint-disable compat/compat */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { GetProp, TableProps } from "antd";
 import { Table } from "antd";
 import type { SorterResult } from "antd/es/table/interface";
@@ -26,40 +25,54 @@ export interface ITableProps {
     current: number;
     pageSize: number;
   };
+  loadData?: (params: any) => void;
 }
 
-//Table Component
 const TableComponent = ({
   columns,
   data,
   loading,
+  setLoading,
   pagination,
+  loadData,
 }: ITableProps) => {
   const [tableParams, setTableParams] = useState<TableParams>({
     pagination: pagination,
   });
 
+  useEffect(() => {
+    setTableParams((prev) => ({
+      ...prev,
+      pagination,
+    }));
+  }, [pagination]);
+
   const handleTableChange: TableProps<any>["onChange"] = (pagination) => {
+    const params = {
+      page: pagination.current,
+      limit: pagination.pageSize,
+    };
+
     setTableParams({
       pagination,
     });
 
-    // `dataSource` is useless since `pageSize` changed
-    if (pagination.pageSize !== tableParams.pagination?.pageSize) {
-      // setData([]);
+    if (loadData) {
+      setLoading?.(true);
+      loadData(params);
     }
   };
 
   return (
     <Table<any>
       columns={columns}
-      rowKey={(record, index) => record.id || record._id || index}
+      rowKey={(record) => record.id || record._id}
       dataSource={data}
       pagination={tableParams.pagination}
       loading={loading}
       onChange={handleTableChange}
-      className="h-screen overflow-y-scroll "
-      sticky={true}
+      className="h-screen overflow-y-scroll"
+      sticky
     />
   );
 };

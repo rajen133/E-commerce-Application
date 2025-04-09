@@ -9,6 +9,7 @@ export const BannerContext = createContext({
   pagination: { current: 1, pageSize: 10 },
   loadData: (_query: any) => {},
 });
+//
 
 const BannerProvider = ({ children }: { children: any }) => {
   const [data, setData] = useState<Array<any>>([]);
@@ -28,6 +29,7 @@ const BannerProvider = ({ children }: { children: any }) => {
         },
       });
       const filteredData = response.data.products.map((item: any) => ({
+        id: item.id,
         title: item.title,
         description: item.description,
         category: item.category,
@@ -35,7 +37,7 @@ const BannerProvider = ({ children }: { children: any }) => {
         images: item.images,
       }));
       setData(filteredData);
-      console.log("Banner data", filteredData);
+      // console.log("Banner data", filteredData);
       setPagination({
         current: response.data.products.page,
         pageSize: response.data.products.limit,
